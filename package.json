@@ -1,0 +1,11 @@
+{
+  "name": "les7",
+  "version": "1.0.0",
+  "description": "2.4 «Взаимодействие в реальном времени с Socket.io»",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
