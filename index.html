@@ -1,42 +1,104 @@
 <!doctype html>
 <html>
-  <head>
-    <title></title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-	  body, html {  height: 100% }
-      body { font: 14px Arial; }
-      form { background: rgb(203, 203, 203) none repeat scroll 0% 0%; padding: 6px; position: fixed; bottom: 0px; width: 50%; margin: 0px 0px 0px -3px; border-radius: 0px 0px 10px 10px; }
-      form input { border: 0px none; padding: 10px 70px 10px 10px; width: 100%; margin-right: 0.5%; float: left; border-radius: 7px; }
-      form button { width: 60px;right: 6px; background: #8C8C8C none repeat scroll 0% 0%; border: none; padding: 10px; position: absolute; border-radius: 0 7px 7px 0; }
-	  .chat { width: 50%; height: 100%; background: #AEFFB2; padding: 3px; border: none; border-radius: 10px; }
-	  #messages { list-style-type: none; margin:4px; padding: 0; }     
-	  #messages li { padding: 5px 10px; border-radius:5px; color:#fff; display: table; margin: 2px 0; min-width: 40%; }
-      <!-- #messages li:nth-child(odd) { background: rgba(203,203,203,.3); } -->
-    </style>
-  </head>
+	<head>
+		<title></title>
+		<style>
+			* { 
+				margin: 0; 
+				padding: 0; 
+				box-sizing: border-box; 
+			}
+			body, html {
+				height: 100% 
+			}
+			body {
+				font: 14px Arial; 
+			}
+			form {
+				background: rgb(203, 203, 203) none repeat scroll 0% 0%; 
+				padding: 6px; 
+				position: fixed; 
+				bottom: 0px; 
+				width: 50%; 
+				margin: 0px 0px 0px -3px; 
+				border-radius: 0px 0px 10px 10px; 
+			}
+			form input {
+				border: 0px none; 
+				padding: 10px 70px 10px 10px; 
+				width: 100%; 
+				margin-right: 0.5%; 
+				float: left; 
+				border-radius: 7px; 
+			}
+			form button { 
+				width: 60px;
+				right: 6px; 
+				background: #8C8C8C none repeat scroll 0% 0%; 
+				border: none; 
+				padding: 10px; 
+				position: absolute; 
+				border-radius: 0 7px 7px 0; 
+			}
+			.chat { 
+				width: 50%; 
+				height: 100%; 
+				background: #AEFFB2; 
+				padding: 3px; 
+				border: none; 
+				border-radius: 10px; 
+			}
+			#messages { 
+				list-style-type: none; 
+				margin:4px; 
+				padding: 0; 
+			}     
+			#messages li { 
+				padding: 5px 10px; 
+				border-radius:5px; 
+				color:#fff; 
+				display: table; 
+				margin: 2px 0; 
+				min-width: 40%; 
+			}
+		</style>
+	</head>
   <body>
-  <div class="chat">
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
-	</div>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
-	<script>
-	  var socket = io();
-	  $('form').submit(function(){
-		socket.emit('chat message', $('#m').val());
-		$('#m').val('');
-		return false;
-	  });
-	  socket.on('chat message', function(msg){
-		$('#messages').append($('<li>').css('background', msg.color).text(msg.message));
-	  });
-	  socket.on('some event', function(msg){
-		$('#messages').append($('<li>').html('<b style="color:' + msg.color + '">' + msg.message + '</b>'));
-	  });
-	</script>
+		<!-- чат -->
+		<div class="chat">
+			<!-- блок сообщений -->
+			<ul id="messages"></ul>
+			<!-- // блок сообщений -->
+			<!-- форма для сообщений -->
+			<form action="">
+				<input id="m" autocomplete="off" /><button>Send</button>
+			</form>
+			<!-- // форма для сообщений -->
+		</div>
+		<!-- // чат -->
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script>
+			/* включаем socket.io */
+			var socket = io();
+			/* Перехватываем отправку данных из формы сообщений */
+			$('form').submit(function(){
+				/* отправляем сообщение на сервер */
+				socket.emit('chat message', $('#m').val());
+				/* очищаем форму */
+				$('#m').val('');
+				return false;
+			});
+			/* принимаем сообщение с сервера */
+			socket.on('chat message', function(msg){
+				/* полученное сообщение добавляем в список сообщений */
+				$('#messages').append($('<li>').css('background', msg.color).text(msg.message));
+			});
+			/* принимаем автоматическое сообщение о пользователе с сервера */
+			socket.on('some event', function(msg){
+				/* полученное сообщение добавляем в список сообщений */
+				$('#messages').append($('<li>').html('<b style="color:' + msg.color + '">' + msg.message + '</b>'));
+			});
+		</script>
   </body>
 </html>
